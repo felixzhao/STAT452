@@ -1,0 +1,91 @@
+---
+title: "VUW_STAT452_Assn2_Q2"
+author: "Quan Zhao"
+date: "2024-03-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("/Users/felix.zhao/Documents/others/STAT452/assignments")
+```
+
+## Load Data
+
+```{r Ship Damage}
+# Read in the ship damage dataset.
+damage <- read.csv("Ship Damage.csv", header = TRUE)
+# Extract numbers of damage incidents for ships of types A to C.
+y.AC <- damage$DAMAGE[damage$TYPE %in% c("A", "B", "C")]
+# Extract numbers of damage incidents for ships of types D and E. 
+y.DE <- damage$DAMAGE[damage$TYPE %in% c("D", "E")]
+```
+
+```{r}
+# Calculate the mean of y.AC
+mean_y_AC <- mean(y.AC)
+
+# Calculate the number of observations in y.AC
+n_y_AC <- length(y.AC)
+
+# Print the results
+print(paste("Mean of y.AC:", mean_y_AC))
+print(paste("Number of observations in y.AC:", n_y_AC))
+# Calculate the sum of y.AC
+sum_y_AC <- sum(y.AC)
+
+# Print the result
+print(paste("Sum of y.AC:", sum_y_AC))
+
+a <- 55/6
+b <- 5/6
+w <- 10
+theta_0 <- 11
+
+a + sum_y_AC
+
+b + n_y_AC
+
+print(paste("posterior mean of y.AC:", (w/(w+n_y_AC))* theta_0+(n_y_AC/(w+n_y_AC))*mean_y_AC))
+
+
+# 95% credible intervals for theta AC.
+
+round(qgamma(c(0.025, 0.975), a + sum_y_AC, b + n_y_AC), 4)
+
+```
+
+```{r}
+# Calculate the mean of y.DE
+mean_y.DE <- mean(y.DE)
+
+# Calculate the number of observations in y.DE
+n_y.DE <- length(y.DE)
+
+# Print the results
+print(paste("Mean of y.DE:", mean_y.DE))
+print(paste("Number of observations in y.DE:", n_y.DE))
+
+# Calculate the sum of y.DE
+sum_y.DE <- sum(y.DE)
+
+# Print the result
+print(paste("Sum of y.DE:", sum_y.DE))
+
+a_DE <- 35/4
+b_DE <- 5/4
+theta_0_DE <- 7
+w_DE <- 10
+
+a_DE + sum_y.DE
+
+b_DE + n_y.DE
+
+print(paste("posterior mean of y.DE:", (w_DE/(w_DE+n_y.DE))* theta_0+(n_y.DE/(w_DE+n_y.DE))*mean_y.DE))
+
+
+# 95% credible intervals for theta DE.
+
+round(qgamma(c(0.025, 0.975), a + sum_y.DE, b + n_y.DE), 4)
+
+```
