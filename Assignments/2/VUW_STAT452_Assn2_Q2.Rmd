@@ -75,42 +75,6 @@ print(paste("95% credible intervals for theta DE:", round(calculate_95_CI(y.DE.a
 
 ```
 
-```{r}
-# Calculate the mean of y.DE
-mean_y.DE <- mean(y.DE)
-
-# Calculate the number of observations in y.DE
-n_y.DE <- length(y.DE)
-
-# Print the results
-print(paste("Mean of y.DE:", mean_y.DE))
-print(paste("Number of observations in y.DE:", n_y.DE))
-
-# Calculate the sum of y.DE
-sum_y.DE <- sum(y.DE)
-
-# Print the result
-print(paste("Sum of y.DE:", sum_y.DE))
-
-a_DE <- 35/4
-b_DE <- 5/4
-theta_0_DE <- 7
-w_DE <- 10
-
-a_DE + sum_y.DE
-
-b_DE + n_y.DE
-
-print(paste("posterior mean of y.DE:", (w_DE/(w_DE+n_y.DE))* theta_0+(n_y.DE/(w_DE+n_y.DE))*mean_y.DE))
-
-
-# 95% credible intervals for theta DE.
-
-round(qgamma(c(0.025, 0.975), a + sum_y.DE, b + n_y.DE), 4)
-
-```
-
-
 ```{r Q2 C}
 
 q2c.w <- seq(1, 100)
