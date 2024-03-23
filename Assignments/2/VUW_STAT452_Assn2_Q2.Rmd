@@ -21,37 +21,44 @@ y.AC <- damage$DAMAGE[damage$TYPE %in% c("A", "B", "C")]
 y.DE <- damage$DAMAGE[damage$TYPE %in% c("D", "E")]
 ```
 
-```{r}
-# Calculate the mean of y.AC
-mean_y_AC <- mean(y.AC)
+```{r functions}
+calculate_posterior_mean <- function(b, n, prior_mean, sample_mean) {
+  return (b/(b+n)) * prior_mean + (n/(b+n)) * sample_mean
+}
 
-# Calculate the number of observations in y.AC
-n_y_AC <- length(y.AC)
+calculate_95_CI <- function(a, b, sum, n) {
+  qgamma(c(0.025, 0.975), a + sum, b + n)
+}
+```
 
-# Print the results
-print(paste("Mean of y.AC:", mean_y_AC))
-print(paste("Number of observations in y.AC:", n_y_AC))
-# Calculate the sum of y.AC
-sum_y_AC <- sum(y.AC)
+```{r global variables}
+y.AC.mean <- mean(y.AC)
+y.AC.n <- length(y.AC)
+y.AC.sum <- sum(y.AC)
+y.AC.w <- 10
+y.AC.prior_mean <- 11
 
-# Print the result
-print(paste("Sum of y.AC:", sum_y_AC))
+y.DE.mean <- mean(y.DE)
+y.DE.n <- length(y.DE)
+y.DE.sum <- sum(y.DE)
+y.DE.w <- 10
+y.DE.prior_mean <- 7
+```
 
-a <- 55/6
-b <- 5/6
-w <- 10
-theta_0 <- 11
+```{r Q2a & b}
 
-a + sum_y_AC
+# AC
 
-b + n_y_AC
+y.AC.a <- 55/6
+y.AC.b <- 5/6
 
-print(paste("posterior mean of y.AC:", (w/(w+n_y_AC))* theta_0+(n_y_AC/(w+n_y_AC))*mean_y_AC))
+print(paste("y.AC.a:", round(y.AC.a,4), "y.AC.b:", round(y.AC.b,4)))
 
+## posterior mean of y.AC
+print(paste("posterior mean of y.AC:", round(calculate_posterior_mean(y.AC.b, y.AC.n, y.AC.prior_mean, y.AC.w),4)))
 
-# 95% credible intervals for theta AC.
-
-round(qgamma(c(0.025, 0.975), a + sum_y_AC, b + n_y_AC), 4)
+## 95% credible intervals for theta AC.
+print(paste("95% credible intervals for theta AC:", round(calculate_95_CI(y.AC.a, y.AC.b, y.AC.sum, y.AC.n),4)))
 
 ```
 
@@ -95,17 +102,24 @@ round(qgamma(c(0.025, 0.975), a + sum_y.DE, b + n_y.DE), 4)
 
 q2c.w <- seq(1, 100)
 
-q2c.a <- 15*q2c.w[1]
-q2c.b <- q2c.w[1]
+q2c.a <- 15*q2c.w
+q2c.b <- q2c.w
 q2c.theta_0 <- q2c.a / q2c.b 
 
 q2c.n <- length(y.DE)
 q2c.y_mean <- mean(y.DE)
 
-calculate_posterior_mean <- function(b, n, prior_mean, sample_mean) {
-  return (b/(b+n)) * prior_mean + (n/(b+n)) * sample_mean
-}
+
 
 posterior_mean <- calculate_posterior_mean(q2c.b, q2c.n, q2c.theta_0, q2c.y_mean)
 print(posterior_mean)
+
+plot(posterior_mean, type = 'o', col = 'blue', xlab = 'Index', ylab = 'Values', main = 'Sequence of Double Numbers')
+
+# Additional point to add
+additional_point <- 0.82
+index_of_additional_point <- length(posterior_mean) + 1 # Assuming it's the next in sequence
+
+# Add the additional point to the plot
+points(index_of_additional_point, additional_point, col = 'red', pch = 19)
 ```   
