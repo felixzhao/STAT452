@@ -55,10 +55,23 @@ y.AC.b <- 5/6
 print(paste("y.AC.a:", round(y.AC.a,4), "y.AC.b:", round(y.AC.b,4)))
 
 ## posterior mean of y.AC
-print(paste("posterior mean of y.AC:", round(calculate_posterior_mean(y.AC.b, y.AC.n, y.AC.prior_mean, y.AC.w),4)))
+print(paste("posterior mean of y.AC:", round(calculate_posterior_mean(y.AC.w, y.AC.n, y.AC.prior_mean, y.AC.mean),4)))
 
 ## 95% credible intervals for theta AC.
 print(paste("95% credible intervals for theta AC:", round(calculate_95_CI(y.AC.a, y.AC.b, y.AC.sum, y.AC.n),4)))
+
+# DE
+
+y.DE.a <- 55/6
+y.DE.b <- 5/6
+
+print(paste("y.DE.a:", round(y.DE.a,4), "y.DE.b:", round(y.DE.b,4)))
+
+## posterior mean of y.DE
+print(paste("posterior mean of y.DE:", round(calculate_posterior_mean(y.DE.w, y.DE.n, y.DE.prior_mean, y.DE.mean),4)))
+
+## 95% credible intervals for theta DE.
+print(paste("95% credible intervals for theta DE:", round(calculate_95_CI(y.DE.a, y.DE.b, y.DE.sum, y.DE.n),4)))
 
 ```
 
@@ -116,5 +129,13 @@ print(posterior_mean)
 
 plot(posterior_mean, type = 'o', col = 'blue', xlab = 'Index', ylab = 'Values', main = 'Sequence of Double Numbers')
 
-abline(h = 0.0382, col = 'red', lwd = 2)
+abline(h = 0.3226, col = 'red', lwd = 2)
+
+# Draw a vertical line at x = 6
+abline(v = 6, col = 'green', lwd = 2) # Using green color for distinction
+
 ```   
+```{r}
+print("posterior expected value of θ_DE to be close to that of θ_AC, when w = 6.")
+```
+
