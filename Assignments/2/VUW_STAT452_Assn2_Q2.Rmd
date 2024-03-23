@@ -116,10 +116,5 @@ print(posterior_mean)
 
 plot(posterior_mean, type = 'o', col = 'blue', xlab = 'Index', ylab = 'Values', main = 'Sequence of Double Numbers')
 
-# Additional point to add
-additional_point <- 0.82
-index_of_additional_point <- length(posterior_mean) + 1 # Assuming it's the next in sequence
-
-# Add the additional point to the plot
-points(index_of_additional_point, additional_point, col = 'red', pch = 19)
+abline(h = 0.0382, col = 'red', lwd = 2)
 ```   
