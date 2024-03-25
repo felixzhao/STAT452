@@ -1,0 +1,20 @@
+---
+title: "VUW_STAT452_Assn2_Q5"
+output: html_document
+date: "2024-03-25"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("/Users/felixzhao/Documents/@Study/STAT\ 452/STAT452/Assignments/2")
+```
+
+```{r data}
+# Read in women's heights data.
+heights <- read.csv("heights.csv") 
+# Extract mothers' heights. 
+heights$Mheight
+# Extract daughters' heights. 
+heights$Dheight
+```
+
