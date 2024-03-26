@@ -2,7 +2,9 @@
 title: "VUW_STAT452_Assn2_Q2"
 author: "Quan Zhao"
 date: "2024-03-21"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}

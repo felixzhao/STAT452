@@ -17,4 +17,59 @@ heights$Mheight
 # Extract daughters' heights. 
 heights$Dheight
 ```
+```{r}
+# Calculate the mean of mothers' heights
+mh.mean <- mean(heights$Mheight)
+
+# Calculate the variance of mothers' heights
+mh.var <- var(heights$Mheight)
+
+mh.sum <-sum(heights$Mheight)
+
+mh.n <- length(heights$Mheight)
+
+# Print the results
+print(paste("Mean of Mothers' Heights:", mh.mean))
+print(paste("Variance of Mothers' Heights:", round(mh.var,4)))
+print(paste("sum of Mothers' Heights:", mh.sum))
+print(paste("number of Mothers' Heights:", mh.n))
+```
+```{r daugther's hegith}
+# Calculate the mean of Daugthers' heights
+dh.mean <- mean(heights$Dheight)
+
+# Calculate the variance of Daugthers' heights
+dh.var <- var(heights$Dheight)
+
+dh.sum <-sum(heights$Dheight)
+
+dh.n <- length(heights$Dheight)
+
+# Print the results
+print(paste("Mean of Daugthers' Heights:", dh.mean))
+print(paste("Variance of Daugthers' Heights:", round(dh.var,4)))
+print(paste("sum of Daugthers' Heights:", dh.sum))
+print(paste("number of Daugthers' Heights:", dh.n))
+```
+```{r}
+get_conjugate_prior_for_theta <- function(tau2, sigma2, mu, y_sum) {
+  a <- 1/tau2 + 1/sigma2
+  b <- mu/tau2 + y_sum/sigma2
+  return(list(a = a, b = b, ratio = b/a, inverse_a = 1/a))
+}
+
+result <- get_conjugate_prior_for_theta(mh.var,mh.var,mh.mean, mh.sum)
+# Print the results
+print(result$a)
+print(result$b)
+print(result$ratio)
+print(result$inverse_a)
+```
+
+```{r}
+
+post_variance <- function()
+ν νσ0+(n−1)S +κ+n(y−μ) .
+n
+```
 
