@@ -62,12 +62,12 @@ mc_theta <- function(a, b, par){
   return(theta1.mc)
 }
 
-mc_theta_compare <- function(a1, b1, a2, b2, par1, par2){
-  print("option 1, theta 1:")
+mc_theta_compare <- function(i, a1, b1, a2, b2, par1, par2){
+  print(paste("option", i, "theta 1:"))
   theta1 <- mc_theta(a1, b1, par1)
   
   
-  print("option 1, theta 2:")
+  print(paste("option", i, "theta 2:"))
   theta2 <- mc_theta(a2, b2, par2)
   
   print("Pr (θ1 > θ2|y1, y2, x1, x2)")
@@ -80,6 +80,20 @@ i_a2 <- i_a1
 i_b1 <- 100
 i_b2 <- i_b1
 
-mc_theta_compare(i_a1, i_b1, i_a2, i_b2, par_1, par_2)
+mc_theta_compare(1, i_a1, i_b1, i_a2, i_b2, par_1, par_2)
 
 # ii
+ii_a1 <- 2.2 * 100
+ii_a2 <- 2.2
+ii_b1 <- 100
+ii_b2 <- 1
+
+mc_theta_compare(2, ii_a1, ii_b1, ii_a2, ii_b2, par_1, par_2)
+
+# iii
+iii_a1 <- 2.2
+iii_a2 <- 2.2
+iii_b1 <- 1
+iii_b2 <- 1
+
+mc_theta_compare(3, iii_a1, iii_b1, iii_a2, iii_b2, par_1, par_2)
