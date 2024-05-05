@@ -24,10 +24,10 @@ summarize_data <- function(df, col_x='x', col_y='y') {
   # Printing the formatted string
   print(result_string)
 
-  post_dist_string <- paste("theta | y ~ Beta(",sum_y,", ", n*sum_x,")")
+  post_dist_string <- paste("theta | y ~ Beta(",sum_y,", ", sum_x,")")
   print(post_dist_string)
   
-  return(list(sum_y=sum_y, n_sum_x=n*sum_x))
+  return(list(sum_y=sum_y, sum_x=sum_x))
 }
 
 print("cancer_noreact.csv")
@@ -46,7 +46,7 @@ set.seed(50)
 
 mc_theta <- function(a, b, par){
   a1_post <- a + par$sum_y
-  b1_post <- b + par$n_sum_x
+  b1_post <- b + par$sum_x
   
   q1ci_post_dixt_theta_1 <- paste("θ | y ~ Beta(",a1_post,", ", b1_post,")")
   print(q1ci_post_dixt_theta_1)
