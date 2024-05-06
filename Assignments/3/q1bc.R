@@ -2,9 +2,9 @@ setwd("/Users/felixzhao/Documents/workspace/STAT452/Assignments/3")
 
 # Q1 b
 
-crdf <- read.csv("cancer_react.csv", header = TRUE)
+crdf <- read.csv("cancer_react.csv", header = TRUE) # theta 2
 
-cndf <- read.csv("cancer_noreact.csv", header = TRUE)
+cndf <- read.csv("cancer_noreact.csv", header = TRUE) # theta 1
 
 
 # Define a function that accepts a DataFrame and two column names for summation
@@ -97,3 +97,4 @@ iii_b1 <- 1
 iii_b2 <- 1
 
 mc_theta_compare(3, iii_a1, iii_b1, iii_a2, iii_b2, par_1, par_2)
+
