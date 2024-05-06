@@ -5,9 +5,8 @@ setwd("/Users/felixzhao/Documents/workspace/STAT452/Assignments/3")
 library(rjags)
 library(coda)
 
-crdf <- read.csv("cancer_react.csv", header = TRUE)
+set.seed(5)
 
-# cndf <- read.csv("cancer_noreact.csv", header = TRUE)
 
 ## Step 1: Specify model
 cat("
@@ -16,62 +15,85 @@ cat("
         yvec[i] ~ dpois(theta*xvec[i])
       }
       theta ~ dgamma(220, 100)}",
-file="q1dmodel.txt")
+    file="q1dmodel.txt")
 
-##Step 2: Specify data
-## Create list object containing data
-crdf.dat<-list(yvec=c(crdf$y),xvec=c(crdf$x),
-              N=length(crdf$x))
-## Step 3: Specify starting/initial values
-crdf.init<-list(list(theta=0.66), list(theta=0.68), list(theta=0.70))
-## Step 4: Compile and adapt model in JAGS
-jagsModel<-jags.model(file="q1dmodel.txt",
-                      data=crdf.dat,
-                      n.chains=3,
-                      inits=crdf.init,
-                      n.adapt=2000
-)
+mcmc <- function(x, y) {
+  ##Step 2: Specify data
+  ## Create list object containing data
+  df.dat<-list(yvec=c(y),xvec=c(x),
+                 N=length(x))
+  ## Step 3: Specify starting/initial values
+  df.init<-list(list(theta=0.66), list(theta=0.68), list(theta=0.70))
+  ## Step 4: Compile and adapt model in JAGS
+  jagsModel<-jags.model(file="q1dmodel.txt",
+                        data=df.dat,
+                        n.chains=3,
+                        inits=df.init,
+                        n.adapt=2000
+  )
+  
+  jagsModel
+  
+  ##Burn-in of 3000 samples
+  # update(jagsModel, n.iter=3000)
+  ## Step 5: Run sampler using coda
+  df.par<-c("theta")
 
-jagsModel
+  df.samp<-coda.samples(jagsModel,
+                         var=df.par,
+                         n.iter=100000,
+                         thin=100)
+  return(df.samp)
+}
 
-##Burn-in of 3000 samples
-update(jagsModel, n.iter=3000)
-## Step 5: Run sampler using coda
-hgt.par<-c("theta")
-set.seed(5)
-hgt.samp<-coda.samples(jagsModel,
-                       var=hgt.par,
-                       n.iter=100000,
-                       thin=100)
+#crdf
+crdf <- read.csv("cancer_react.csv", header = TRUE)
+crdf.samp <- mcmc(crdf$x, crdf$y)
+crdf.mat<-as.matrix(crdf.samp)
+
+# cndf
+cndf <- read.csv("cancer_noreact.csv", header = TRUE)
+cndf.samp <- mcmc(cndf$x, cndf$y)
+cndf.mat<-as.matrix(cndf.samp)
 
 
 # result
-hgt.mat<-as.matrix(hgt.samp)
-head(hgt.mat)
+print("Pr (θ1 > θ2|y1, y2, x1, x2)")
+mean(crdf.mat > cndf.mat)
+
+print("95% quantile-based posterior intervals for θ")
+print(quantile(crdf.mat, probs = c(0.025, 0.5, 0.975)))
+
+print("95% quantile-based posterior intervals for θ")
+print(quantile(cndf.mat, probs = c(0.025, 0.5, 0.975)))
 
 ########MCMC DIAGNOSTICS########################
+
+#theta.samp <- crdf.samp
+theta.samp <- cndf.samp
+
 ## Plots: traceplot and histogram/density plot
 par(mar=c(3,2,1,2))
-plot(hgt.samp)
+plot(theta.samp)
 
 ## Calculate effective sample size
 ##ESS summed across all chains
-effectiveSize(hgt.samp)
+effectiveSize(theta.samp)
 
 ##ESS for each chain
-lapply(hgt.samp, effectiveSize)
+lapply(theta.samp, effectiveSize)
 
 ##PSRF - Gelman and Rubin diagnostic
-gelman.diag(hgt.samp)
+gelman.diag(theta.samp)
 
 ## Plot of PSRF
-gelman.plot(hgt.samp)
+gelman.plot(theta.samp)
 
 ## Geweke time series diagnostic
-geweke.diag(hgt.samp)
+geweke.diag(theta.samp)
 
 ## Plot of Geweke diagnostic
-geweke.plot(hgt.samp)
+geweke.plot(theta.samp)
 
 ## View summary of generated samples
-summary(hgt.samp)
+summary(theta.samp)
