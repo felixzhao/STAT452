@@ -2,6 +2,8 @@ setwd("/Users/felixzhao/Documents/workspace/STAT452/Assignments/3")
 
 library(rjags)
 
+# q3b
+
 # Assume the dataset is loaded into a dataframe `data`
 data <- read.csv("gambia.csv")
 
@@ -69,4 +71,21 @@ geweke.plot(theta.samp)
 
 ## View summary of generated samples
 summary(theta.samp)
+
+
+# q3c
+
+# Assuming 'samples' contains the MCMC output as previously generated
+beta1_samples <- as.matrix(samples[, "beta1"])
+
+# Calculate the odds ratio for each sampled value of beta1
+odds_ratio_samples <- exp(beta1_samples)
+
+# Compute median and 95% credible interval
+or_median <- median(odds_ratio_samples)
+or_ci <- quantile(odds_ratio_samples, probs = c(0.025, 0.975))
+
+# Print the results
+cat("The median of the odds ratio is:", or_median, "\n")
+cat("The 95% credible interval for the odds ratio is:", or_ci, "\n")
 
