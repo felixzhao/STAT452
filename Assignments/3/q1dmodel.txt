@@ -1,0 +1,6 @@
+
+    model {
+      for (i in 1:N){
+        yvec[i] ~ dpois(theta*xvec[i])
+      }
+      theta ~ dgamma(220, 100)}

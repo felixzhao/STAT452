@@ -30,7 +30,7 @@ mcmc <- function(x, y) {
                         n.chains=3,
                         inits=df.init,
                         n.adapt=2000
-  )
+                        )
   
   jagsModel
   
@@ -59,7 +59,8 @@ cndf.mat<-as.matrix(cndf.samp)
 
 # result
 print("Pr (θ1 > θ2|y1, y2, x1, x2)")
-mean(crdf.mat > cndf.mat)
+
+mean(cndf.mat > crdf.mat)
 
 print("95% quantile-based posterior intervals for θ")
 print(quantile(crdf.mat, probs = c(0.025, 0.5, 0.975)))

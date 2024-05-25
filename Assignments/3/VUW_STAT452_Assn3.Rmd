@@ -1,0 +1,22 @@
+---
+title: "VUW_STAT452_Assn3"
+author: "Quan Zhao"
+date: "2024-04-28"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+setwd("/Users/felixzhao/Documents/workspace/STAT452/Assignments/3")
+```
+
+# Q1b
+
+## Load Data
+
+```{r Ship Damage}
+# Read in the dataset.
+damage <- read.csv("cancer_react.csv", header = TRUE)
+```

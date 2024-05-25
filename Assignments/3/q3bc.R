@@ -38,9 +38,9 @@ samples <- coda.samples(model, variable.names = params, n.iter = 5000)
 summary(samples)
 
 # Diagnostics
-#plot(samples)
-#gelman.diag(samples)
-#gelman.plot(samples)
+plot(samples)
+gelman.diag(samples)
+gelman.plot(samples)
 
 ########MCMC DIAGNOSTICS########################
 
