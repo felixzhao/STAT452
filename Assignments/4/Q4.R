@@ -37,12 +37,13 @@ inits <- function(){
 # Setup model
 parameters <- c("beta", "beta0")
 model <- jags.model(textConnection(model_string), data = data_jags, inits = inits, n.chains = 3)
-update(model, 1000) # Burn-in
+update(model, 2000) # Burn-in
 
 # Run the model
-samples <- coda.samples(model, parameters, 5000)
+samples <- coda.samples(model, parameters, n.iter=15000, thin=5)
 
 # Analysis
 print(summary(samples))
+plot(samples)
 effectiveSize(samples)
 autocorr.diag(samples)
