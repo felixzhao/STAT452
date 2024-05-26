@@ -95,3 +95,8 @@ model[1:p]
 
 
 beta[1:p,]
+
+# Create table of model posterior probabilities
+model_probs <- table(model)/length(model)
+model_probs <- sort(model_probs,dec=T)
+round(model_probs,3)
