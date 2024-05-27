@@ -1,3 +1,5 @@
+# week 8
+
 # Install and load necessary packages
 install.packages("rjags")
 install.packages("coda")
