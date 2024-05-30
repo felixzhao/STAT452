@@ -52,10 +52,17 @@ model {
 # Initialize and run the JAGS model
 model <- jags.model(textConnection(model_string), data = data_jags, n.chains = chains)
 update(model, 1000)  # Burn-in phase
-samples <- coda.samples(model, variable.names = c("alpha", "beta", "gamma"), n.iter = 5000)
+samples <- coda.samples(model, variable.names = c("alpha", "beta", "gamma"), n.iter = 200000, thin = 100)
 
 # Output results
 print(summary(samples))
+
+
+MCMCsummary(samples,
+            params = c("beta"),
+            Rhat = TRUE,
+            n.eff = TRUE,
+            probs = c(0.025, 0.5, 0.975), round = 2)
 
 # Plot posterior distributions of beta coefficients
 plot(samples)

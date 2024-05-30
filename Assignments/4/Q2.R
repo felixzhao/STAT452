@@ -65,11 +65,12 @@ summary(samples)
 beta_hat <- summary(samples)$statistics[, "Mean"]
 
 # Compute the predicted values
-Y_hat <- X %*% beta_hat
+Y_hat <- X %*% head(beta_hat, -1)
 
 # Compute the residuals
 residuals <- Y - Y_hat
 
+par(mfrow = c(1, 2))
 # Check if residuals follow a normal distribution
 # Plotting histogram
 hist(residuals, main = "Histogram of Residuals", xlab = "Residuals")
@@ -78,11 +79,14 @@ hist(residuals, main = "Histogram of Residuals", xlab = "Residuals")
 qqnorm(residuals)
 qqline(residuals, col = "red")
 
+par(mfrow = c(1, 1))
+
 # Shapiro-Wilk test for normality
 shapiro.test(residuals)
 
 
 # Question (c)
+
 
 # Prepare state variable
 state <- as.character(all_dat[, 3])

@@ -1,3 +1,5 @@
+# week 9
+
 # Install necessary packages if not already installed
 install.packages(c("titanic", "rjags", "coda"))
 
@@ -66,9 +68,11 @@ samples <- coda.samples(jags_model, variable.names = params, n.iter = 5000)
 # Summary of the posterior samples
 summary(samples)
 
+par(mfrow = c(3, 2))
 # Trace plots
 traceplot(samples)
 
+par(mfrow = c(3, 2))
 # Density plots
 densplot(samples)
 
