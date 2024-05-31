@@ -2,6 +2,8 @@ library(MASS)
 library(rjags)
 library(MCMCvis)
 
+set.seed(123)
+
 data(Boston)
 
 # Standardize the predictors
@@ -24,6 +26,9 @@ model {
 }
 "
 
+# parameters
+chains <- 3
+names <- setdiff(names(Boston), "medv")
 
 
 # Prepare data for JAGS
@@ -51,41 +56,47 @@ MCMCsummary(samples,
             probs = c(0.025, 0.5, 0.975), round = 2)
 
 
-# Combine chains into a single matrix
-beta <- NULL
-for(l in 1:chains){
-  beta <- rbind(beta,samples[[l]])
+# Analysis
+
+# Extract beta coefficients from samples and combine chains
+beta_cols <- grep("beta", varnames(samples[[1]]), value = TRUE)  # find all beta column names
+beta_combined <- do.call(rbind, lapply(samples, function(x) x[, beta_cols]))
+
+# Convert to 'mcmc' object
+beta_mcmc <- as.mcmc(beta_combined)
+
+# Set column names for beta based on predictor names
+colnames(beta_mcmc) <- names
+
+# Histograms for beta coefficients with predictor names
+for(j in 1:ncol(beta_mcmc)) {
+  hist(beta_mcmc[,j], xlab=names[j], ylab="Density", main=paste("Histogram of", names[j]), breaks=30, freq=FALSE)
 }
-colnames(beta) <- names
-# Draw histograms that summarise marginal posteriors
-for(j in 1:p){
-  hist(beta[,j],xlab=expression(beta[j]),ylab="Posterior density",
-       breaks=100,main=names[j])
-}
 
+# Define a threshold for considering coefficients as non-zero
+threshold <- 0.01
 
-# Calculate marginal inclusion probabilities for predictors
-# and 95% credible intervals for coefficients
-Inc_Prob <- apply(beta!=0,2,mean)
-Q <- t(apply(beta,2,quantile,c(0.5,0.025,0.975)))
-out <- cbind(Inc_Prob,Q)
-kable(round(out,2))
+# Calculate marginal inclusion probabilities
+Inc_Prob <- colMeans(abs(beta_mcmc) > threshold)
 
-##Identify model at each iteration
-model <- "Intercept"
-for(j in 1:p){
-  model <- paste(model,ifelse(beta[,j]==0,
-                              ""
-                              ,"+"))
-  model <- paste(model,ifelse(beta[,j]==0,
-                              "",names[j]))
-}
-model[1:p]
+# Calculate 95% credible intervals for each beta coefficient
+Q <- t(apply(beta_mcmc, 2, quantile, probs = c(0.025, 0.5, 0.975)))
 
-beta[1:p,]
+# Combine inclusion probabilities and credible intervals
+out <- cbind(Inc_Prob, Q)
+print(round(out, 2))
 
+# Generate model formulas based on non-zero coefficients, incorporating predictor names
+models <- apply(beta_mcmc, 1, function(row) {
+  included_terms <- names[which(abs(row) > threshold)]
+  if (length(included_terms) > 0) {
+    paste("medv ~", paste(included_terms, collapse=" + "))
+  } else {
+    "medv ~ 1"  # Intercept-only model
+  }
+})
 
-# Create table of model posterior probabilities
-model_probs <- table(model)/length(model)
-model_probs <- sort(model_probs,dec=T)
-round(model_probs,3)[1:3]
+# Calculate and display model probabilities
+model_probs <- table(models)
+model_probs <- sort(model_probs, decreasing = TRUE)
+print(round(model_probs / sum(model_probs), 3)[1:3])
