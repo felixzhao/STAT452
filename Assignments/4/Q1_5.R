@@ -20,8 +20,8 @@ mh_sampler <- function(N, sd_alpha, sd_beta, y, t) {
     alpha_prop <- rnorm(1, alpha_vec[i-1], sd_alpha)
     lambda_prop_alpha <- exp(alpha_prop + beta_vec[i-1] * t)
     lambda_current_alpha <- exp(alpha_vec[i-1] + beta_vec[i-1] * t)
-    prob_prop_alpha <- prod(dpois(y, lambda=lambda_prop_alpha)) * exp(-alpha_prop^2 / 200) # * dnorm(alpha_prop, mean=0, sd=10)
-    prob_current_alpha <- prod(dpois(y, lambda=lambda_current_alpha)) * exp(-alpha_vec[i-1]^2 / 200) # * dnorm(alpha_vec[i-1], mean=0, sd=10)
+    prob_prop_alpha <- prod(dpois(y, lambda=lambda_prop_alpha)) * exp(-alpha_prop^2 / 200) * dnorm(alpha_prop, mean=alpha_vec[i-1], sd=sd_alpha)
+    prob_current_alpha <- prod(dpois(y, lambda=lambda_current_alpha)) * exp(-alpha_vec[i-1]^2 / 200) * dnorm(alpha_vec[i-1], mean=alpha_prop, sd=sd_alpha)
     r_alpha <- prob_prop_alpha / prob_current_alpha
     
     # Accept or reject the new alpha value
@@ -36,8 +36,8 @@ mh_sampler <- function(N, sd_alpha, sd_beta, y, t) {
     beta_prop <- rnorm(1, beta_vec[i-1], sd_beta)
     lambda_prop_beta <- exp(alpha_vec[i] + beta_prop * t)
     lambda_current_beta <- exp(alpha_vec[i] + beta_vec[i-1] * t)
-    prob_prop_beta <- prod(dpois(y, lambda=lambda_prop_beta)) * exp(-beta_prop^2 / 200) # * dnorm(beta_prop, mean=0, sd=10)
-    prob_current_beta <- prod(dpois(y, lambda=lambda_current_beta)) * exp(-beta_vec[i-1]^2 / 200) # * dnorm(beta_vec[i-1], mean=0, sd=10)
+    prob_prop_beta <- prod(dpois(y, lambda=lambda_prop_beta)) * exp(-beta_prop^2 / 200) * dnorm(beta_prop, mean=beta_vec[i-1], sd=sd_beta)
+    prob_current_beta <- prod(dpois(y, lambda=lambda_current_beta)) * exp(-beta_vec[i-1]^2 / 200) * dnorm(beta_vec[i-1], mean=beta_prop, sd=sd_beta)
     r_beta <- prob_prop_beta / prob_current_beta
     
     # Accept or reject the new beta value
