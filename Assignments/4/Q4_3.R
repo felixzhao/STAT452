@@ -34,8 +34,6 @@ names <- setdiff(names(Boston), "medv")
 # Prepare data for JAGS
 data_jags <- list(medv = Boston$medv, X = X_scaled, n = nrow(Boston), p = ncol(Boston)-1)
 
-# Model string remains the same (as provided in the earlier code snippet)
-
 # Initial Values
 inits <- function() {
   list(alpha = 0, beta = rep(0, 13), gamma = rep(0, 13), tau = 1, sigma_beta = 1)
@@ -44,7 +42,7 @@ inits <- function() {
 # Run Model
 model <- jags.model(textConnection(model_string), data = data_jags, inits = inits, n.chains = 3, n.adapt = 1000)
 update(model, 1000)
-samples <- coda.samples(model, variable.names = c("beta", "gamma"), n.iter = 5000)
+samples <- coda.samples(model, variable.names = c("beta"), n.iter = 5000)
 
 # Output
 summary(samples)
@@ -68,10 +66,12 @@ beta_mcmc <- as.mcmc(beta_combined)
 # Set column names for beta based on predictor names
 colnames(beta_mcmc) <- names
 
+par(mfrow=c(5, 3))
 # Histograms for beta coefficients with predictor names
 for(j in 1:ncol(beta_mcmc)) {
   hist(beta_mcmc[,j], xlab=names[j], ylab="Density", main=paste("Histogram of", names[j]), breaks=30, freq=FALSE)
 }
+par(mfrow=c(1, 1))
 
 # Define a threshold for considering coefficients as non-zero
 threshold <- 0.01
