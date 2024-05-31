@@ -1,6 +1,3 @@
-install.packages("MASS")  # for the mvrnorm function
-library(MASS)
-
 # Define the parameters and data
 y <- c(64, 13, 33, 18, 30, 20)
 t <- 1:6  # Years from 2010 to 2015, relative to 2009 + t
@@ -26,6 +23,10 @@ beta_chain[1] <- beta_current
 sd_alpha <- 0.2
 sd_beta <- 0.05
 
+# Acceptance counters
+accepted_alpha <- 0
+accepted_beta <- 0
+
 # Log posterior function
 log_posterior <- function(alpha, beta, y, t) {
   lambda <- exp(alpha + beta * t)
@@ -49,11 +50,13 @@ for (i in 2:n_iter) {
   # Decide to accept/reject alpha
   if (log(runif(1)) < log_alpha_ratio) {
     alpha_current <- alpha_prop
+    accepted_alpha <- accepted_alpha + 1
   }
   
   # Decide to accept/reject beta
   if (log(runif(1)) < log_beta_ratio) {
     beta_current <- beta_prop
+    accepted_beta <- accepted_beta + 1
   }
   
   # Update the chains
@@ -61,8 +64,15 @@ for (i in 2:n_iter) {
   beta_chain[i] <- beta_current
 }
 
+# Calculate acceptance rates
+acceptance_rate_alpha <- accepted_alpha / (n_iter - 1)
+acceptance_rate_beta <- accepted_beta / (n_iter - 1)
+
+# Print acceptance rates
+cat("Acceptance rate for alpha:", acceptance_rate_alpha, "\n")
+cat("Acceptance rate for beta:", acceptance_rate_beta, "\n")
+
 # Plotting results to check convergence
 par(mfrow = c(2, 1))
 plot(alpha_chain, type = 'l', main = 'Trace plot for alpha')
 plot(beta_chain, type = 'l', main = 'Trace plot for beta')
-
